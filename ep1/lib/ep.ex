@@ -2,9 +2,13 @@ defmodule EP do
   def main do
     conjuntoA = [1, 2, 3]
     conjuntoAxA = create_conjunto_AxA(conjuntoA)
-    conjuntoReflexivo = get_conjunto_reflexivo(conjuntoAxA)
+    conjuntoReflexivo = Enum.reject(get_conjunto_reflexivo(conjuntoAxA), &is_nil/1)
+
+    IO.puts("Conjunto Reflexivo: ")
+    IO.inspect(conjuntoReflexivo)
   end
 
+  # Cria o conjunto AxA
   def create_conjunto_AxA(conjuntoA) do
     conjuntoAxA = []
 
@@ -13,22 +17,22 @@ defmodule EP do
     end
   end
 
+  # Recebe o conjunto AxA e retorna o seu conjunto reflexivo
   def get_conjunto_reflexivo(conjuntoAxA) do
     conjuntoReflexivo = []
 
     Enum.map(conjuntoAxA, fn relacaoBinaria ->
-      # verifico se todos elementos sao igual ao primeiro
       primeiroElemento = List.first(relacaoBinaria)
 
-      # se is reflexivo for um numero, significa que nao eh reflexivo
       isReflexivo =
         Enum.find(relacaoBinaria, fn elemento ->
           elemento != primeiroElemento
         end)
 
-      if isReflexivo != nil do
+      if isReflexivo == nil do
          conjuntoReflexivo ++ relacaoBinaria
       end
+      
     end)
   end
 end
