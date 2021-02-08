@@ -3,8 +3,11 @@ defmodule Ep2 do
     defstruct alfa: "a", beta: "abc"
   end
 
-   defmodule Gramatica do
-    defstruct naoTerminais: "AB", terminais: "SBC", leisDeFormacoes: [%LeiDeFormacao{alfa: "S", beta: "aBC"}], simboloInicio: "S"
+  defmodule Gramatica do
+    defstruct naoTerminais: "AB",
+              terminais: "SBC",
+              leisDeFormacoes: [%LeiDeFormacao{alfa: "S", beta: "aBC"}],
+              simboloInicio: "S"
   end
 
   def main do
@@ -15,6 +18,7 @@ defmodule Ep2 do
 
     naoTerminais = "AB"
     terminais = "SBC"
+
     leisDeFormacoes = [
       %LeiDeFormacao{alfa: "S", beta: "aBC"},
       %LeiDeFormacao{alfa: "S", beta: "aSBC"},
@@ -24,26 +28,45 @@ defmodule Ep2 do
       %LeiDeFormacao{alfa: "bC", beta: "bc"},
       %LeiDeFormacao{alfa: "cC", beta: "CC"}
     ]
+
     simboloInicio = "S"
 
-    gramatica = %Gramatica{naoTerminais: naoTerminais, terminais: terminais, leisDeFormacoes: leisDeFormacoes, simboloInicio: simboloInicio}
+    gramatica = %Gramatica{
+      naoTerminais: naoTerminais,
+      terminais: terminais,
+      leisDeFormacoes: leisDeFormacoes,
+      simboloInicio: simboloInicio
+    }
 
     # 1. Funcao que gera as derivacoes
-    listaCadeiasDaGramatica = geraDerivacoes(gramatica, String.length(cadeiaAVerificar))
-  
+    listaCadeiasDaGramatica =
+      Enum.reject(geraDerivacoes(gramatica, String.length(cadeiaAVerificar)), &is_nil/1)
+
+    listaCadeiasDaGramatica
     # 2. Comparar se a cadeia de verificacao bate com as cadeias geradas
-    cadeiaPertence = verificaCadeiaPertence(cadeiaAVerificar, listaCadeiasDaGramatica)
-    IO.inspect(cadeiaPertence)
+    # cadeiaPertence = verificaCadeiaPertence(cadeiaAVerificar, listaCadeiasDaGramatica)
   end
 
   def geraDerivacoes(gramatica, tamanhoCadeia) do
-    gramatica.naoTerminais
-      
+    simboloInicio = gramatica.simboloInicio
+    leisQueComecamComSimboloInicio = []
+
+    Enum.map(gramatica.leisDeFormacoes, fn leiDeFormacao ->
+      IO.inspect(leiDeFormacao)
+      IO.inspect(simboloInicio)
+
+      if leiDeFormacao.alfa == simboloInicio do
+        leisQueComecamComSimboloInicio ++ leiDeFormacao
+      end
+    end)
+
+    # if (cadeia inicial)
+    # LeisQueComecam.add(item)
   end
 
-  def verificaCadeiaPertence (cadeiaAVerificar, listaCadeiasDaGramatica) do
-    pertence = Enum.find(listaCadeiasDaGramatica, fn cadeiaDaGramatica ->
-      cadeiaDaGramatica == cadeiaAVerificar
-    end)
-  end
+  # def verificaCadeiaPertence (cadeiaAVerificar, listaCadeiasDaGramatica) do
+  #   pertence = Enum.find(listaCadeiasDaGramatica, fn cadeiaDaGramatica ->
+  #     cadeiaDaGramatica == cadeiaAVerificar
+  #   end)
+  # end
 end
