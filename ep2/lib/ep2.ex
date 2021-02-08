@@ -38,28 +38,32 @@ defmodule Ep2 do
       simboloInicio: simboloInicio
     }
 
-    # 1. Funcao que gera as derivacoes
-    listaCadeiasDaGramatica =
-      Enum.reject(geraDerivacoes(gramatica, String.length(cadeiaAVerificar)), &is_nil/1)
+    # 1. Procura leis com simbolos iniciais
+    leisQueComecamComSimboloInicio =
+      Enum.reject(
+        procuraLeisComSimbolosIniciais(gramatica),
+        &is_nil/1
+      )
 
-    listaCadeiasDaGramatica
-    # 2. Comparar se a cadeia de verificacao bate com as cadeias geradas
+    # 2. Funcao que gera as derivacoes
+    listaDerivacoes = geraDerivacoes(gramatica,  String.length(cadeiaAVerificar), leisQueComecamComSimboloInicio)
+
+    # 3. Comparar se a cadeia de verificacao bate com as cadeias geradas
     # cadeiaPertence = verificaCadeiaPertence(cadeiaAVerificar, listaCadeiasDaGramatica)
   end
 
-  def geraDerivacoes(gramatica, tamanhoCadeia) do
+  def procuraLeisComSimbolosIniciais(gramatica) do
     simboloInicio = gramatica.simboloInicio
     leisQueComecamComSimboloInicio = []
 
     Enum.map(gramatica.leisDeFormacoes, fn leiDeFormacao ->
-      IO.inspect(leiDeFormacao)
-      IO.inspect(simboloInicio)
-
       if leiDeFormacao.alfa == simboloInicio do
         leisQueComecamComSimboloInicio ++ leiDeFormacao
       end
     end)
+  end
 
+  def geraDerivacoes(gramatica, tamanhoCadeia, leisQueComecamComSimboloInicio) do
     # if (cadeia inicial)
     # LeisQueComecam.add(item)
   end
