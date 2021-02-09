@@ -14,7 +14,7 @@ defmodule Ep2 do
     # Entrada vai ser a cadeia para teste e a gramatica
     # Gramatica = (naoTerminais, terminais, leisDeFormacoes, simboloInicio)
 
-    cadeiaAVerificar = "abc"
+    cadeiaAVerificar = "aabc"
 
     naoTerminais = "AB"
     terminais = "SBC"
@@ -39,38 +39,46 @@ defmodule Ep2 do
     }
 
     # 1. Procura leis com simbolos iniciais
-    leisQueComecamComSimboloInicio =
-      Enum.reject(
-        procuraLeisComSimbolosIniciais(gramatica),
-        &is_nil/1
-      )
+    derivacoes =
+      geraDerivacoes(leisDeFormacoes, simboloInicio, String.length(cadeiaAVerificar), [])
 
     # 2. Funcao que gera as derivacoes
-    listaDerivacoes = geraDerivacoes(gramatica,  String.length(cadeiaAVerificar), leisQueComecamComSimboloInicio)
+    # listaDerivacoes = geraDerivacoes(gramatica,  String.length(cadeiaAVerificar), "S")
 
     # 3. Comparar se a cadeia de verificacao bate com as cadeias geradas
     # cadeiaPertence = verificaCadeiaPertence(cadeiaAVerificar, listaCadeiasDaGramatica)
   end
 
-  def procuraLeisComSimbolosIniciais(gramatica) do
-    simboloInicio = gramatica.simboloInicio
-    leisQueComecamComSimboloInicio = []
-
-    Enum.map(gramatica.leisDeFormacoes, fn leiDeFormacao ->
-      if leiDeFormacao.alfa == simboloInicio do
-        leisQueComecamComSimboloInicio ++ leiDeFormacao
-      end
-    end)
+  # Recebe uma lista de leis e retorna o primeiro que tiver com simbolo inicial
+  def procuraLeiDeAcordoComOSimboloInicial([head | tail], simboloInicial) do
+    if(head.alfa == simboloInicial) do
+      head
+    else
+      procuraLeiDeAcordoComOSimboloInicial(tail, simboloInicial)
+    end
   end
 
-  def geraDerivacoes(gramatica, tamanhoCadeia, leisQueComecamComSimboloInicio) do
-    # if (cadeia inicial)
-    # LeisQueComecam.add(item)
+  def procuraLeiDeAcordoComOSimboloInicial([], simboloInicial) do
   end
 
-  # def verificaCadeiaPertence (cadeiaAVerificar, listaCadeiasDaGramatica) do
-  #   pertence = Enum.find(listaCadeiasDaGramatica, fn cadeiaDaGramatica ->
-  #     cadeiaDaGramatica == cadeiaAVerificar
-  #   end)
-  # end
+  def geraDerivacoes([head | tail], simboloInicial, tamanhoCadeia, derivacoes) do
+    IO.inspect(String.length(head.beta))
+    IO.inspect(tamanhoCadeia)
+
+    if(String.length(head.beta) == tamanhoCadeia) do
+      #condicao de parada
+    end
+
+    #only terminais
+    if(1) do
+      # sucesso adiciona em derivacoes
+    end
+
+    geraDerivacoes(tail, simboloInicial, tamanhoCadeia, derivacoes)
+  end
+
+  def geraDerivacoes([], simboloInicial, tamanhoCadeia, derivacoes) do
+    #acabou, retorna a lista derivacoes
+    derivacoes
+  end
 end
