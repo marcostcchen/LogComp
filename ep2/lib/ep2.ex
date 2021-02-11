@@ -4,8 +4,8 @@ defmodule Ep2 do
   end
 
   defmodule Gramatica do
-    defstruct naoTerminais: "AB",
-              terminais: "SBC",
+    defstruct naoTerminais: "SBC",
+              terminais: "abc",
               leisDeFormacoes: [%LeiDeFormacao{alfa: "S", beta: "aBC"}],
               simboloInicio: "S"
   end
@@ -14,10 +14,10 @@ defmodule Ep2 do
     # Entrada vai ser a cadeia para teste e a gramatica
     # Gramatica = (naoTerminais, terminais, leisDeFormacoes, simboloInicio)
 
-    cadeiaAVerificar = "aabc"
+    cadeiaAVerificar = "aabbcc"
 
-    naoTerminais = "AB"
-    terminais = "SBC"
+    naoTerminais = "SBC"
+    terminais = "abc"
 
     leisDeFormacoes = [
       %LeiDeFormacao{alfa: "S", beta: "aBC"},
@@ -49,6 +49,22 @@ defmodule Ep2 do
     # cadeiaPertence = verificaCadeiaPertence(cadeiaAVerificar, listaCadeiasDaGramatica)
   end
 
+  def geraDerivacoes([head | tail], simboloInicial, terminais, tamanhoCadeia, derivacoes) do
+    if(String.length(head.beta) == tamanhoCadeia) do
+    end
+
+    isApenasTerminais = verificaSeApenasTerminais(head.beta, terminais)
+    if(isApenasTerminais) do
+      geraDerivacoes(tail, simboloInicial, terminais, tamanhoCadeia, derivacoes ++ [head.beta])
+    else
+      geraDerivacoes(tail, simboloInicial, terminais, tamanhoCadeia, derivacoes)
+    end
+  end
+
+  def geraDerivacoes([], simboloInicial, terminais, tamanhoCadeia, derivacoes) do  #acabou, retorna a lista derivacoes
+    derivacoes
+  end
+
   # Recebe uma lista de leis e retorna o primeiro que tiver com simbolo inicial
   def procuraLeiDeAcordoComOSimboloInicial([head | tail], simboloInicial) do
     if(head.alfa == simboloInicial) do
@@ -61,36 +77,16 @@ defmodule Ep2 do
   def procuraLeiDeAcordoComOSimboloInicial([], simboloInicial) do
   end
 
-  def geraDerivacoes([head | tail], simboloInicial, terminais, tamanhoCadeia, derivacoes) do
-    IO.inspect(String.length(head.beta))
-    IO.inspect(tamanhoCadeia)
-
-    if(String.length(head.beta) == tamanhoCadeia) do
-      #condicao de parada
-    end
-
-    #only terminais
-    if(apenasTerminais(head.beta)) do
-      # sucesso adiciona em derivacoes
-    end
-
-    geraDerivacoes(tail, simboloInicial, terminais, tamanhoCadeia, derivacoes)
-  end
-
-  def geraDerivacoes([], simboloInicial, terminais, tamanhoCadeia, derivacoes) do
-    #acabou, retorna a lista derivacoes
-    derivacoes
-  end
-
   #recebe o beta e verifica se sao apenas terminais
-  def apenasTerminais(beta, terminais) do
+  def verificaSeApenasTerminais(beta, terminais) do
     letrasBeta = String.codepoints(beta)
     terminais = String.codepoints(terminais)
 
     verificaSeApenasTerminal(letrasBeta, terminais)
   end
 
-  def verificaSeApenasTerminal ([head | tail], terminais) do
+  #!!Testar!!
+  def verificaSeApenasTerminal([head | tail], terminais) do
     #if head pertence aos terminais, continua ate acabar, se acabar eh true
     pertence = Enum.find(terminais, fn terminal ->
       head == terminal
@@ -103,7 +99,7 @@ defmodule Ep2 do
     end
   end
 
-  def verificaSeApenasTerminal ([], terminais) do
+  def verificaSeApenasTerminal([], terminais) do
     true
   end
 
