@@ -49,11 +49,15 @@ defmodule Ep2 do
     # cadeiaPertence = verificaCadeiaPertence(cadeiaAVerificar, listaCadeiasDaGramatica)
   end
 
+  #head eh uma lei de formacao
   def geraDerivacoes([head | tail], simboloInicial, terminais, tamanhoCadeia, derivacoes) do
     if(String.length(head.beta) == tamanhoCadeia) do
     end
 
-    isApenasTerminais = verificaSeApenasTerminais(head.beta, terminais)
+    listLetrasBeta = String.codepoints(head.beta)
+    listLetrasTerminais = String.codepoints(terminais)
+
+    isApenasTerminais = verificaSeApenasTerminais(listLetrasBeta, listLetrasTerminais)
     if(isApenasTerminais) do
       geraDerivacoes(tail, simboloInicial, terminais, tamanhoCadeia, derivacoes ++ [head.beta])
     else
@@ -63,6 +67,23 @@ defmodule Ep2 do
 
   def geraDerivacoes([], simboloInicial, terminais, tamanhoCadeia, derivacoes) do  #acabou, retorna a lista derivacoes
     derivacoes
+  end
+
+  def verificaSeApenasTerminais([head | tail], listLetrasTerminais) do
+    #if head pertence aos terminais, continua ate acabar, se acabar eh true
+    pertence = Enum.find(listLetrasTerminais, fn terminal ->
+      head == terminal
+    end)
+
+    if(pertence != nil) do
+      verificaSeApenasTerminais(tail, listLetrasTerminais)
+    else
+      false
+    end
+  end
+
+  def verificaSeApenasTerminais([], listLetrasTerminais) do
+    true
   end
 
   # Recebe uma lista de leis e retorna o primeiro que tiver com simbolo inicial
@@ -75,32 +96,6 @@ defmodule Ep2 do
   end
 
   def procuraLeiDeAcordoComOSimboloInicial([], simboloInicial) do
-  end
-
-  #recebe o beta e verifica se sao apenas terminais
-  def verificaSeApenasTerminais(beta, terminais) do
-    letrasBeta = String.codepoints(beta)
-    terminais = String.codepoints(terminais)
-
-    verificaSeApenasTerminal(letrasBeta, terminais)
-  end
-
-  #!!Testar!!
-  def verificaSeApenasTerminal([head | tail], terminais) do
-    #if head pertence aos terminais, continua ate acabar, se acabar eh true
-    pertence = Enum.find(terminais, fn terminal ->
-      head == terminal
-    end)
-
-    if(pertence != nil) do
-      verificaSeApenasTerminal(tail, terminais)
-    else
-      false
-    end
-  end
-
-  def verificaSeApenasTerminal([], terminais) do
-    true
   end
 
 end

@@ -24,8 +24,8 @@ defmodule Ep2Test do
   end
 
   test "verificaSeApenasTerminais" do
-    beta = "aabbcc"
-    terminais = "abc"
+    beta = ["a","a","b","b","c","c"]
+    terminais = ["a","b","c"]
 
     assert Ep2.verificaSeApenasTerminais(beta, terminais) == true
   end
