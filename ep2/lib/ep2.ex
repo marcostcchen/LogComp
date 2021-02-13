@@ -40,7 +40,13 @@ defmodule Ep2 do
 
     # 1. Procura leis com simbolos iniciais
     derivacoes =
-      geraDerivacoes(leisDeFormacoes, simboloInicio, terminais, String.length(cadeiaAVerificar), [])
+      geraDerivacoes(
+        gramatica.leisDeFormacoes,
+        gramatica.simboloInicio,
+        gramatica.terminais,
+        String.length(cadeiaAVerificar),
+        []
+      )
 
     # 2. Funcao que gera as derivacoes
     # listaDerivacoes = geraDerivacoes(gramatica,  String.length(cadeiaAVerificar), "S")
@@ -49,7 +55,7 @@ defmodule Ep2 do
     # cadeiaPertence = verificaCadeiaPertence(cadeiaAVerificar, listaCadeiasDaGramatica)
   end
 
-  #head eh uma lei de formacao
+  # head eh uma lei de formacao
   def geraDerivacoes([head | tail], simboloInicial, terminais, tamanhoCadeia, derivacoes) do
     if(String.length(head.beta) == tamanhoCadeia) do
     end
@@ -58,22 +64,31 @@ defmodule Ep2 do
     listLetrasTerminais = String.codepoints(terminais)
 
     isApenasTerminais = verificaSeApenasTerminais(listLetrasBeta, listLetrasTerminais)
+
     if(isApenasTerminais) do
       geraDerivacoes(tail, simboloInicial, terminais, tamanhoCadeia, derivacoes ++ [head.beta])
     else
-      geraDerivacoes(tail, simboloInicial, terminais, tamanhoCadeia, derivacoes)
+      # Verifica se eh possivel fazer derivacoes
+      novaCadeia =
+      if(novaCadeia != "") do
+        geraDerivacoes([novaCadeia | tail], simboloInicial, terminais, tamanhoCadeia, derivacoes)
+      else # Nao tem mais derivacoes
+        geraDerivacoes(tail, simboloInicial, terminais, tamanhoCadeia, derivacoes)
+      end
     end
   end
 
-  def geraDerivacoes([], simboloInicial, terminais, tamanhoCadeia, derivacoes) do  #acabou, retorna a lista derivacoes
+  # acabou, retorna a lista derivacoes
+  def geraDerivacoes([], simboloInicial, terminais, tamanhoCadeia, derivacoes) do
     derivacoes
   end
 
   def verificaSeApenasTerminais([head | tail], listLetrasTerminais) do
-    #if head pertence aos terminais, continua ate acabar, se acabar eh true
-    pertence = Enum.find(listLetrasTerminais, fn terminal ->
-      head == terminal
-    end)
+    # if head pertence aos terminais, continua ate acabar, se acabar eh true
+    pertence =
+      Enum.find(listLetrasTerminais, fn terminal ->
+        head == terminal
+      end)
 
     if(pertence != nil) do
       verificaSeApenasTerminais(tail, listLetrasTerminais)
@@ -87,15 +102,14 @@ defmodule Ep2 do
   end
 
   # Recebe uma lista de leis e retorna o primeiro que tiver com simbolo inicial
-  def procuraLeiDeAcordoComOSimboloInicial([head | tail], simboloInicial) do
-    if(head.alfa == simboloInicial) do
+  def procuraLeiDeAcordoComOAlfa([head | tail], alfa) do
+    if(head.alfa == alfa) do
       head
     else
-      procuraLeiDeAcordoComOSimboloInicial(tail, simboloInicial)
+      procuraLeiDeAcordoComOAlfa(tail, alfa)
     end
   end
 
-  def procuraLeiDeAcordoComOSimboloInicial([], simboloInicial) do
+  def procuraLeiDeAcordoComOAlfa([], alfa) do
   end
-
 end

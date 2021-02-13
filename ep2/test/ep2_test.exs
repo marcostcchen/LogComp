@@ -6,7 +6,7 @@ defmodule Ep2Test do
     defstruct alfa: "a", beta: "abc"
   end
 
-  test "procuraLeiDeAcordoComOSimboloInicial" do
+  test "procuraLeiDeAcordoComOAlfa" do
 
     leisDeFormacoes = [
       %LeiDeFormacao{alfa: "S", beta: "aSBC"},
@@ -20,7 +20,7 @@ defmodule Ep2Test do
 
     simboloInicial = "S"
 
-    assert Ep2.procuraLeiDeAcordoComOSimboloInicial(leisDeFormacoes, simboloInicial) ==  %LeiDeFormacao{alfa: "S", beta: "aSBC"}
+    assert Ep2.procuraLeiDeAcordoComOAlfa(leisDeFormacoes, simboloInicial) ==  %LeiDeFormacao{alfa: "S", beta: "aSBC"}
   end
 
   test "verificaSeApenasTerminais" do
