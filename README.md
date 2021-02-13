@@ -9,4 +9,4 @@ mix new project --module Project
 mix compile
 iex -S mix
 recompile ()
-
+mix test
