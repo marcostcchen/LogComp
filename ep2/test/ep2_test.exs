@@ -29,4 +29,11 @@ defmodule Ep2Test do
 
     assert Ep2.verificaSeApenasTerminais(beta, terminais) == true
   end
+
+  test "verificaCadeiaPertenceDerivacoes" do
+    listaDerivacoes = ["abc, ac, bc"]
+    cadeiaAVerificar = "bc"
+
+    assert Ep2.verificaCadeiaPertenceDerivacoes(listaDerivacoes, cadeiaAVerificar) == true
+  end
 end

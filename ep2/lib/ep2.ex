@@ -38,48 +38,48 @@ defmodule Ep2 do
       simboloInicio: simboloInicio
     }
 
-    # 1. Procura leis com simbolos iniciais
-    derivacoes =
+    # 1. Funcao que gera as derivacoes
+    listaDerivacoes =
       geraDerivacoes(
         gramatica.leisDeFormacoes,
         gramatica.simboloInicio,
         gramatica.terminais,
+        gramatica.leisDeFormacoes,
         String.length(cadeiaAVerificar),
         []
       )
 
-    # 2. Funcao que gera as derivacoes
-    # listaDerivacoes = geraDerivacoes(gramatica,  String.length(cadeiaAVerificar), "S")
-
-    # 3. Comparar se a cadeia de verificacao bate com as cadeias geradas
-    # cadeiaPertence = verificaCadeiaPertence(cadeiaAVerificar, listaCadeiasDaGramatica)
+    # 2. Comparar se a cadeia de verificacao bate com as cadeias geradas
+    cadeiaPertence = verificaCadeiaPertenceDerivacoes(listaDerivacoes, cadeiaAVerificar)
   end
 
   # head eh uma lei de formacao
-  def geraDerivacoes([head | tail], simboloInicial, terminais, tamanhoCadeia, derivacoes) do
+  def geraDerivacoes([head | tail], simboloInicial, terminais, tamanhoCadeia, leisDeFormacoes, derivacoes) do
     if(String.length(head.beta) == tamanhoCadeia) do
     end
 
     listLetrasBeta = String.codepoints(head.beta)
     listLetrasTerminais = String.codepoints(terminais)
 
+    #Verifico se o beta em analise apresenta apenas terminais
     isApenasTerminais = verificaSeApenasTerminais(listLetrasBeta, listLetrasTerminais)
 
     if(isApenasTerminais) do
-      geraDerivacoes(tail, simboloInicial, terminais, tamanhoCadeia, derivacoes ++ [head.beta])
+      geraDerivacoes(tail, simboloInicial, terminais, tamanhoCadeia, leisDeFormacoes, derivacoes ++ [head.beta])
     else
       # Verifica se eh possivel fazer derivacoes
-      novaCadeia =
-      if(novaCadeia != "") do
-        geraDerivacoes([novaCadeia | tail], simboloInicial, terminais, tamanhoCadeia, derivacoes)
-      else # Nao tem mais derivacoes
-        geraDerivacoes(tail, simboloInicial, terminais, tamanhoCadeia, derivacoes)
-      end
+      #novaCadeia = verificaSeTemDerivacoes(listLetrasBeta, leisDeFormacoes)
+
+      # if(novaCadeia == "") do
+      #   geraDerivacoes([novaCadeia | tail], simboloInicial, terminais, tamanhoCadeia, leisDeFormacoes, derivacoes)
+      #else  Nao tem mais derivacoes
+      geraDerivacoes(tail, simboloInicial, terminais, tamanhoCadeia, leisDeFormacoes, derivacoes)
+      #end
     end
   end
 
   # acabou, retorna a lista derivacoes
-  def geraDerivacoes([], simboloInicial, terminais, tamanhoCadeia, derivacoes) do
+  def geraDerivacoes([], simboloInicial, terminais, tamanhoCadeia,leisDeFormacoes, derivacoes) do
     derivacoes
   end
 
@@ -111,5 +111,16 @@ defmodule Ep2 do
   end
 
   def procuraLeiDeAcordoComOAlfa([], alfa) do
+  end
+
+  def verificaCadeiaPertenceDerivacoes([head | tail], cadeiaAVerificar) do
+    if(head == cadeiaAVerificar) do
+      true
+    else
+      verificaCadeiaPertenceDerivacoes(tail, cadeiaAVerificar)
+    end
+  end
+
+  def verificaCadeiaPertenceDerivacoes([], cadeiaAVerificar) do
   end
 end
