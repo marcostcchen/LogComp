@@ -1,12 +1,12 @@
-defmodule FiniteAutomataTest do
+defmodule AutomatoFinito do
   use ExUnit.Case
-  doctest FiniteAutomata
+  doctest AutomatoFinito
 
-  test "should create a automata" do
+  test "Criar automato teste" do
     transitions = %{ "q0" => [{"a", "q0"}, {"b", "q1"}] }
     accept_states = ["q1"]
     initial_state = "q0"
-    assert FiniteAutomata.init_automata(transitions, initial_state, accept_states) ==
+    assert AutomatoFinito.inicializar_automato(transitions, initial_state, accept_states) ==
       %{
         transitions: transitions,
         initial_state: initial_state,
@@ -16,7 +16,7 @@ defmodule FiniteAutomataTest do
   end
 
   test "should add the tape to automata with input" do
-    assert FiniteAutomata.get_tape(["h", "e"]) ==
+    assert AutomatoFinito.pegar_fita(["h", "e"]) ==
       %{ left: ["$"], right: ["h", "e", "$"] }
   end
 
@@ -24,10 +24,10 @@ defmodule FiniteAutomataTest do
     transitions = %{ "q0" => [{"a", "q0"}, {"b", "q1"}] }
     initial_state = "q0"
     accept_states = ["q1"]
-    automata = FiniteAutomata.init_automata(transitions, initial_state, accept_states)
-    tape = FiniteAutomata.get_tape(["b"])
+    automata = AutomatoFinito.inicializar_automato(transitions, initial_state, accept_states)
+    tape = AutomatoFinito.pegar_fita(["b"])
 
-    assert FiniteAutomata.get_new_states(automata, tape) ==
+    assert AutomatoFinito.pegar_novos_estados(automata, tape) ==
       ["q1"]
   end
 
@@ -35,29 +35,29 @@ defmodule FiniteAutomataTest do
     transitions = %{ "q0" => [{"a", "q0"}, {"b", "q1"}] }
     initial_state = "q0"
     accept_states = ["q1"]
-    automata = FiniteAutomata.init_automata(transitions, initial_state, accept_states)
-    tape = FiniteAutomata.get_tape(["c"])
+    automata = AutomatoFinito.inicializar_automato(transitions, initial_state, accept_states)
+    tape = AutomatoFinito.pegar_fita(["c"])
 
-    assert FiniteAutomata.get_new_states(automata, tape) == []
+    assert AutomatoFinito.pegar_novos_estados(automata, tape) == []
   end
 
   test "update automata" do
     transitions = %{ "q0" => [{"a", "q0"}, {"b", "q1"}] }
     initial_state = "q0"
     accept_states = ["q1"]
-    automata = FiniteAutomata.init_automata(transitions, initial_state, accept_states)
+    automata = AutomatoFinito.inicializar_automato(transitions, initial_state, accept_states)
     new_state = "q1"
 
-    assert FiniteAutomata.update_automata(automata, new_state).current_state == "q1"
+    assert AutomatoFinito.atualizar_automato(automata, new_state).current_state == "q1"
   end
 
   test "should validate accept state" do
     transitions = %{ "q0" => [{"a", "q0"}, {"b", "q1"}] }
     initial_state = "q1"
     accept_states = ["q1"]
-    automata = FiniteAutomata.init_automata(transitions, initial_state, accept_states)
+    automata = AutomatoFinito.inicializar_automato(transitions, initial_state, accept_states)
 
-    assert FiniteAutomata.accept_state?(automata) == :true
+    assert AutomatoFinito.estado_aceito?(automata) == :true
   end
 
   test "should run acceptor valid input" do
@@ -68,10 +68,10 @@ defmodule FiniteAutomataTest do
     }
     initial_state = "q0"
     accept_states = ["q2"]
-    automata = FiniteAutomata.init_automata(transitions, initial_state, accept_states)
-    tape = FiniteAutomata.get_tape(["b", "a"])
+    automata = AutomatoFinito.inicializar_automato(transitions, initial_state, accept_states)
+    tape = AutomatoFinito.pegar_fita(["b", "a"])
 
-    assert FiniteAutomata.run_acceptor(automata, tape) == :true
+    assert AutomatoFinito.executa_aceitacao(automata, tape) == :true
   end
 
   test "should run acceptor invalid input" do
@@ -82,10 +82,10 @@ defmodule FiniteAutomataTest do
     }
     initial_state = "q0"
     accept_states = ["q2"]
-    automata = FiniteAutomata.init_automata(transitions, initial_state, accept_states)
-    tape = FiniteAutomata.get_tape(["a", "b"])
+    automata = AutomatoFinito.inicializar_automato(transitions, initial_state, accept_states)
+    tape = AutomatoFinito.pegar_fita(["a", "b"])
 
-    assert FiniteAutomata.run_acceptor(automata, tape) == :false
+    assert AutomatoFinito.executa_aceitacao(automata, tape) == :false
   end
 
   test "should run acceptor valid input non-deterministic" do
@@ -96,10 +96,10 @@ defmodule FiniteAutomataTest do
     }
     initial_state = "q0"
     accept_states = ["q2"]
-    automata = FiniteAutomata.init_automata(transitions, initial_state, accept_states)
-    tape = FiniteAutomata.get_tape(["a", "a"])
+    automata = AutomatoFinito.inicializar_automato(transitions, initial_state, accept_states)
+    tape = AutomatoFinito.pegar_fita(["a", "a"])
 
-    assert FiniteAutomata.run_acceptor(automata, tape) == :true
+    assert AutomatoFinito.executa_aceitacao(automata, tape) == :true
   end
 
   test "should run acceptor invalid input non-deterministic" do
@@ -110,9 +110,9 @@ defmodule FiniteAutomataTest do
     }
     initial_state = "q0"
     accept_states = ["q2"]
-    automata = FiniteAutomata.init_automata(transitions, initial_state, accept_states)
-    tape = FiniteAutomata.get_tape(["a", "b", "b"])
+    automata = AutomatoFinito.inicializar_automato(transitions, initial_state, accept_states)
+    tape = AutomatoFinito.pegar_fita(["a", "b", "b"])
 
-    assert FiniteAutomata.run_acceptor(automata, tape) == :false
+    assert AutomatoFinito.executa_aceitacao(automata, tape) == :false
   end
 end

@@ -8,52 +8,39 @@ defmodule AutomatoFinito do
     }
   end
 
-  # Gets a new tape with a given input
-  def get_tape(input) do
-    left = ["$"]
-    right = List.insert_at(input, length(input), "$")
-    # Returning created tape
-    Tape.init(left, right)
+  def pegar_fita(input) do
+    esquerda = ["$"]
+    direita = List.insert_at(input, length(input), "$")
+    Fita.inicializar(esquerda, direita)
   end
 
-  def get_new_states(automata, tape) do
-    current_input = Tape.at(tape)
-    # Retuning the new states
+  def pegar_novos_estados(automata, fita) do
+    current_input = Fita.at(fita)
     automata.transicoes
-      # Getting only transicoes for the current_state
       |> Map.get(automata.current_state)
-      # Fitering transicoes that accepts the current_input
       |> Enum.filter(fn {elem, _state} -> elem == current_input end)
-      # Getting only state
       |> Enum.map(fn {_elem, state} -> state end)
   end
 
-  def update_automata(automata, new_state) do
-    # Setting new state
+  def atualizar_automato(automata, novo_estado) do
     automata
-      |> Map.put(:current_state, new_state)
+      |> Map.put(:current_state, novo_estado)
   end
 
-  def accept_state?(automata) do
+  def estado_aceito?(automata) do
     Enum.member?(automata.estadosAceitos, automata.current_state)
   end
 
-  def run_acceptor(automata, tape) do
-    # Checking if is tape end
-    if Tape.end?(tape) do
+  def executa_aceitacao(automata, Fita) do
+    if Fita.end?(Fita) do
       accept_state?(automata)
     else
-      # Getting new states
-      new_states = get_new_states(automata, tape)
-      # Reconfig tape
-      new_tape = Tape.reconfig(tape)
-      # For each one of the possible states, we create a new automata and run acceptor
+      new_states = pegar_novos_estados(automata, Fita)
+      new_Fita = Fita.reconfig(Fita)
       new_states
-        |> Enum.any?(fn new_state ->
-          # Updating automata
-          new_automata = update_automata(automata, new_state)
-          # Calling run_acceptor again with updated data
-          run_acceptor(new_automata, new_tape)
+        |> Enum.any?(fn novo_estado ->
+          new_automata = atualizar_automato(automata, novo_estado)
+          executa_aceitacao(new_automata, new_Fita)
         end)
     end
   end
